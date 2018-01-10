@@ -1,6 +1,6 @@
 {
   "name": "tilmeld-client",
-  "version": "1.0.0-beta.12",
+  "version": "1.0.0-beta.13",
   "description": "Nymph user and group management with access controls.",
   "main": "lib/Entities/index.js",
   "scripts": {
@@ -35,7 +35,8 @@
   },
   "homepage": "https://github.com/sciactive/tilmeld-client#readme",
   "dependencies": {
-    "nymph-client": "^3.0.2"
+    "nymph-client": "^3.0.2",
+    "pform": "^3.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
