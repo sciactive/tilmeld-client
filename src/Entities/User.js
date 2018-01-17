@@ -89,22 +89,12 @@ export default class User extends Entity {
 
   static current(...args) {
     return User.serverCallStatic('current', args).then((data) => {
-      if (data) {
-        const user = new User();
-        user.init(data)
-        data = user;
-      }
       return Promise.resolve(data);
     });
   }
 
   static loginUser(...args) {
     return User.serverCallStatic('loginUser', args).then((data) => {
-      if (data.user) {
-        const user = new User();
-        user.init(data.user)
-        data.user = user;
-      }
       if (data.result) {
         for (const callback of User.loginCallbacks) {
           callback(data.user);
