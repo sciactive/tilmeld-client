@@ -1,6 +1,6 @@
 {
   "name": "tilmeld-client",
-  "version": "1.0.0-beta.13",
+  "version": "1.0.0-beta.14",
   "description": "Nymph user and group management with access controls.",
   "main": "lib/Entities/index.js",
   "scripts": {
@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/sciactive/tilmeld-client#readme",
   "dependencies": {
-    "nymph-client": "^3.0.2",
+    "nymph-client": "^3.0.4",
     "pform": "^3.3.0"
   },
   "devDependencies": {
@@ -44,8 +44,8 @@
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-3": "^6.24.1",
-    "svelte": "^1.48.0",
-    "svelte-cli": "^1.4.0",
+    "svelte": "^1.51.1",
+    "svelte-cli": "^2.1.0",
     "umailphp": "^2.2"
   }
 }
