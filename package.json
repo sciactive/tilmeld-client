@@ -2,18 +2,28 @@
   "name": "tilmeld-client",
   "version": "1.0.0-beta.14",
   "description": "Nymph user and group management with access controls.",
-  "main": "lib/Entities/index.js",
-  "scripts": {
-    "build": "npm run build-components && npm run build-entities",
-    "build-components": "npm run build-login && npm run build-recover && npm run build-change-password",
-    "build-login": "svelte compile --format es src/Components/TilmeldLogin.html > lib/Components/TilmeldLogin.js && babel lib/Components/TilmeldLogin.js -o lib/Components/TilmeldLogin.js",
-    "build-recover": "svelte compile --format es src/Components/TilmeldRecover.html > lib/Components/TilmeldRecover.js && babel lib/Components/TilmeldRecover.js -o lib/Components/TilmeldRecover.js",
-    "build-change-password": "svelte compile --format es src/Components/TilmeldChangePassword.html > lib/Components/TilmeldChangePassword.js && babel lib/Components/TilmeldChangePassword.js -o lib/Components/TilmeldChangePassword.js",
-    "build-entities": "babel -d lib/Entities/ src/Entities/",
-    "watch-entities": "babel --watch -d lib/Entities/ src/Entities/",
-    "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "lib/umd/index.js",
+  "directories": {
+    "lib": "lib/umd"
   },
+  "scripts": {
+    "build-components": "npm run build-login && npm run build-recover && npm run build-change-password",
+    "build-login": "node make.js src/Components/TilmeldLogin.html > lib/es/Components/TilmeldLogin.js",
+    "build-recover": "node make.js src/Components/TilmeldRecover.html > lib/es/Components/TilmeldRecover.js",
+    "build-change-password": "node make.js src/Components/TilmeldChangePassword.html > lib/es/Components/TilmeldChangePassword.js",
+    "build-entities": "cp -a src/Entities lib/es/",
+    "build-index": "cp src/index.js lib/es/",
+    "transpile": "babel -d lib/umd/ lib/es/",
+    "build": "npm run build-components && npm run build-entities && npm run build-index && npm run transpile",
+    "prepare": "npm run lint && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/Components/*.html src/"
+  },
+  "files": [
+    "lib",
+    "src",
+    "make.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sciactive/tilmeld-client.git"
@@ -40,12 +50,21 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-3": "^6.24.1",
-    "svelte": "^1.51.1",
-    "svelte-cli": "^2.1.0",
+    "eslint": "^4.19.1",
+    "eslint-config-semistandard": "^12.0.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-html": "^4.0.3",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "svelte": "^2.1.0",
     "umailphp": "^2.2"
   }
 }

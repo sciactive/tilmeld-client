@@ -1,20 +1,10 @@
-import Nymph from "Nymph";
-import Entity from "NymphEntity";
+import Nymph from 'Nymph';
+import Entity from 'NymphEntity';
 
 export default class User extends Entity {
-
-  // === Static Properties ===
-
-  static etype = "tilmeld_user";
-  // The name of the server class
-  static class = "Tilmeld\\Entities\\User";
-  static registerCallbacks = [];
-  static loginCallbacks = [];
-  static logoutCallbacks = [];
-
   // === Constructor ===
 
-  constructor(id) {
+  constructor (id) {
     super(id);
     this.data.enabled = true;
     this.data.abilities = [];
@@ -25,39 +15,41 @@ export default class User extends Entity {
 
   // === Instance Methods ===
 
-  checkUsername(...args) {
+  checkUsername (...args) {
     return this.serverCall('checkUsername', args, true);
   }
 
-  checkEmail(...args) {
+  checkEmail (...args) {
     return this.serverCall('checkEmail', args, true);
   }
 
-  checkPhone(...args) {
+  checkPhone (...args) {
     return this.serverCall('checkPhone', args, true);
   }
 
-  getAvatar(...args) {
+  getAvatar (...args) {
     return this.serverCall('getAvatar', args, true);
   }
 
-  register(...args) {
+  register (...args) {
     return this.serverCall('register', args).then((data) => {
       if (data.result) {
         for (const callback of User.registerCallbacks) {
-          callback(this);
+          const that = this;
+          callback(that);
         }
       }
       if (data.loggedin) {
         for (const callback of User.loginCallbacks) {
-          callback(this);
+          const that = this;
+          callback(that);
         }
       }
       return Promise.resolve(data);
     });
   }
 
-  logout(...args) {
+  logout (...args) {
     return this.serverCall('logout', args).then((data) => {
       if (data.result) {
         for (const callback of User.logoutCallbacks) {
@@ -68,17 +60,17 @@ export default class User extends Entity {
     });
   }
 
-  gatekeeper(...args) {
+  gatekeeper (...args) {
     return this.serverCall('gatekeeper', args, true);
   }
 
-  changePassword(...args) {
+  changePassword (...args) {
     return this.serverCall('changePassword', args);
   }
 
   // === Static Methods ===
 
-  static byUsername(username) {
+  static byUsername (username) {
     return Nymph.getEntity(
       {'class': User.class},
       {'type': '&',
@@ -87,13 +79,11 @@ export default class User extends Entity {
     );
   }
 
-  static current(...args) {
-    return User.serverCallStatic('current', args).then((data) => {
-      return Promise.resolve(data);
-    });
+  static current (...args) {
+    return User.serverCallStatic('current', args);
   }
 
-  static loginUser(...args) {
+  static loginUser (...args) {
     return User.serverCallStatic('loginUser', args).then((data) => {
       if (data.result) {
         for (const callback of User.loginCallbacks) {
@@ -104,19 +94,19 @@ export default class User extends Entity {
     });
   }
 
-  static sendRecoveryLink(...args) {
+  static sendRecoveryLink (...args) {
     return User.serverCallStatic('sendRecoveryLink', args);
   }
 
-  static recover(...args) {
+  static recover (...args) {
     return User.serverCallStatic('recover', args);
   }
 
-  static getClientConfig(...args) {
+  static getClientConfig (...args) {
     return User.serverCallStatic('getClientConfig', args);
   }
 
-  static on(eventType, callback) {
+  static on (eventType, callback) {
     if (eventType === 'register') {
       User.registerCallbacks.push(callback);
     } else if (eventType === 'login') {
@@ -126,6 +116,15 @@ export default class User extends Entity {
     }
   }
 }
+
+// === Static Properties ===
+
+User.etype = 'tilmeld_user';
+// The name of the server class
+User.class = 'Tilmeld\\Entities\\User';
+User.registerCallbacks = [];
+User.loginCallbacks = [];
+User.logoutCallbacks = [];
 
 Nymph.setEntityClass(User.class, User);
 export {User};

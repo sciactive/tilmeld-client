@@ -1,17 +1,10 @@
-import Nymph from "Nymph";
-import Entity from "NymphEntity";
+import Nymph from 'Nymph';
+import Entity from 'NymphEntity';
 
 export default class Group extends Entity {
-
-  // === Static Properties ===
-
-  static etype = "tilmeld_group";
-  // The name of the server class
-  static class = "Tilmeld\\Entities\\Group";
-
   // === Constructor ===
 
-  constructor(id) {
+  constructor (id) {
     super(id);
     this.data.enabled = true;
     this.data.abilities = [];
@@ -20,44 +13,50 @@ export default class Group extends Entity {
 
   // === Instance Methods ===
 
-  checkGroupname(...args) {
+  checkGroupname (...args) {
     return this.serverCall('checkGroupname', args, true);
   }
 
-  checkEmail(...args) {
+  checkEmail (...args) {
     return this.serverCall('checkEmail', args, true);
   }
 
-  getAvatar(...args) {
+  getAvatar (...args) {
     return this.serverCall('getAvatar', args, true);
   }
 
-  getChildren(...args) {
+  getChildren (...args) {
     return this.serverCall('getChildren', args, true);
   }
 
-  getDescendants(...args) {
+  getDescendants (...args) {
     return this.serverCall('getDescendants', args, true);
   }
 
-  getLevel(...args) {
+  getLevel (...args) {
     return this.serverCall('getLevel', args, true);
   }
 
-  isDescendant(...args) {
+  isDescendant (...args) {
     return this.serverCall('isDescendant', args, true);
   }
 
   // === Static Methods ===
 
-  static getPrimaryGroups(...args) {
+  static getPrimaryGroups (...args) {
     return Group.serverCallStatic('getPrimaryGroups', args);
   }
 
-  static getSecondaryGroups(...args) {
+  static getSecondaryGroups (...args) {
     return Group.serverCallStatic('getSecondaryGroups', args);
   }
 }
+
+// === Static Properties ===
+
+Group.etype = 'tilmeld_group';
+// The name of the server class
+Group.class = 'Tilmeld\\Entities\\Group';
 
 Nymph.setEntityClass(Group.class, Group);
 export {Group};
