@@ -7,10 +7,7 @@
     "lib": "lib/umd"
   },
   "scripts": {
-    "build-components": "npm run build-login && npm run build-recover && npm run build-change-password",
-    "build-login": "node make.js src/Components/TilmeldLogin.html > lib/es/Components/TilmeldLogin.js",
-    "build-recover": "node make.js src/Components/TilmeldRecover.html > lib/es/Components/TilmeldRecover.js",
-    "build-change-password": "node make.js src/Components/TilmeldChangePassword.html > lib/es/Components/TilmeldChangePassword.js",
+    "build-components": "svelte compile src/Components -o lib/es/Components",
     "build-entities": "cp -a src/Entities lib/es/",
     "build-index": "cp src/index.js lib/es/",
     "transpile": "babel -d lib/umd/ lib/es/",
@@ -65,6 +62,7 @@
     "eslint-plugin-react": "^7.7.0",
     "eslint-plugin-standard": "^3.0.1",
     "svelte": "^2.1.0",
+    "svelte-cli": "^3.0.0",
     "umailphp": "^2.2"
   }
 }
