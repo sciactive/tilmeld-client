@@ -1,7 +1,6 @@
-import Nymph from 'Nymph';
-import Entity from 'NymphEntity';
+import {Nymph, Entity} from 'nymph-client';
 
-export default class User extends Entity {
+export class User extends Entity {
   // === Constructor ===
 
   constructor (id) {
@@ -127,4 +126,5 @@ User.loginCallbacks = [];
 User.logoutCallbacks = [];
 
 Nymph.setEntityClass(User.class, User);
-export {User};
+
+export default User;

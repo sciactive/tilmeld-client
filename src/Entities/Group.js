@@ -1,7 +1,6 @@
-import Nymph from 'Nymph';
-import Entity from 'NymphEntity';
+import {Nymph, Entity} from 'nymph-client';
 
-export default class Group extends Entity {
+export class Group extends Entity {
   // === Constructor ===
 
   constructor (id) {
@@ -59,4 +58,5 @@ Group.etype = 'tilmeld_group';
 Group.class = 'Tilmeld\\Entities\\Group';
 
 Nymph.setEntityClass(Group.class, Group);
-export {Group};
+
+export default Group;
