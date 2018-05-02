@@ -1,4 +1,7 @@
-import {Nymph, Entity} from 'nymph-client';
+/* global atob */
+import {Nymph, Entity, PubSub} from 'nymph-client';
+
+let currentToken = null;
 
 export class User extends Entity {
   // === Constructor ===
@@ -39,6 +42,7 @@ export class User extends Entity {
         }
       }
       if (data.loggedin) {
+        User.handleToken();
         for (const callback of User.loginCallbacks) {
           const that = this;
           callback(that);
@@ -51,6 +55,7 @@ export class User extends Entity {
   logout (...args) {
     return this.serverCall('logout', args).then((data) => {
       if (data.result) {
+        User.handleToken();
         for (const callback of User.logoutCallbacks) {
           callback();
         }
@@ -85,6 +90,7 @@ export class User extends Entity {
   static loginUser (...args) {
     return User.serverCallStatic('loginUser', args).then((data) => {
       if (data.result) {
+        User.handleToken();
         for (const callback of User.loginCallbacks) {
           callback(data.user);
         }
@@ -103,6 +109,23 @@ export class User extends Entity {
 
   static getClientConfig (...args) {
     return User.serverCallStatic('getClientConfig', args);
+  }
+
+  static handleToken () {
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)TILMELDAUTH\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    if (currentToken !== token) {
+      if (token === '') {
+        Nymph.setXsrfToken(null);
+        PubSub.setToken(null);
+      } else {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jwt = JSON.parse(atob(base64));
+        Nymph.setXsrfToken(jwt.xsrfToken);
+        PubSub.setToken(token);
+      }
+    }
+    currentToken = token;
   }
 
   static on (eventType, callback) {
@@ -126,5 +149,7 @@ User.loginCallbacks = [];
 User.logoutCallbacks = [];
 
 Nymph.setEntityClass(User.class, User);
+
+User.handleToken();
 
 export default User;
