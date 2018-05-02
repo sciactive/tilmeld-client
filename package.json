@@ -2,15 +2,15 @@
   "name": "tilmeld-client",
   "version": "1.0.0-beta.16",
   "description": "Nymph user and group management with access controls.",
-  "main": "lib/umd/tilmeld-client.js",
-  "browser": "lib/es/tilmeld-client.js",
+  "main": "lib/umd/TilmeldClient.js",
+  "browser": "lib/es/TilmeldClient.js",
   "directories": {
     "lib": "lib/umd"
   },
   "scripts": {
     "build-components": "svelte compile src/Components -o lib/es/Components",
     "build-entities": "cp -a src/Entities lib/es/",
-    "build-index": "cp src/tilmeld-client.js lib/es/",
+    "build-index": "cp src/TilmeldClient.js lib/es/",
     "transpile": "babel -d lib/umd/ lib/es/",
     "build": "npm run build-components && npm run build-entities && npm run build-index && npm run transpile",
     "prepare": "npm run lint && npm run build",
