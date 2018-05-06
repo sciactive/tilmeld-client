@@ -116,13 +116,17 @@ export class User extends Entity {
     if (currentToken !== token) {
       if (token === '') {
         Nymph.setXsrfToken(null);
-        PubSub.setToken(null);
+        if (PubSub.pubsubURL != null) {
+          PubSub.setToken(null);
+        }
       } else {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jwt = JSON.parse(atob(base64));
         Nymph.setXsrfToken(jwt.xsrfToken);
-        PubSub.setToken(token);
+        if (PubSub.pubsubURL != null) {
+          PubSub.setToken(token);
+        }
       }
     }
     currentToken = token;
