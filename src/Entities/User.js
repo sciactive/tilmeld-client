@@ -145,7 +145,6 @@ export class User extends Entity {
 
 // === Static Properties ===
 
-User.etype = 'tilmeld_user';
 // The name of the server class
 User.class = 'Tilmeld\\Entities\\User';
 User.registerCallbacks = [];

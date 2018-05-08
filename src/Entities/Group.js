@@ -53,7 +53,6 @@ export class Group extends Entity {
 
 // === Static Properties ===
 
-Group.etype = 'tilmeld_group';
 // The name of the server class
 Group.class = 'Tilmeld\\Entities\\Group';
 
