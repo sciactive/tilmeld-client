@@ -55,6 +55,7 @@ export class User extends Entity {
   logout (...args) {
     return this.serverCall('logout', args).then((data) => {
       if (data.result) {
+        User.currentUser = undefined;
         User.handleToken();
         for (const callback of User.logoutCallbacks) {
           callback();
@@ -84,12 +85,23 @@ export class User extends Entity {
   }
 
   static current (...args) {
-    return User.serverCallStatic('current', args);
+    if (User.currentUser !== undefined) {
+      return Promise.resolve(User.currentUser);
+    }
+    if (!User.currentUserPromise) {
+      User.currentUserPromise = User.serverCallStatic('current', args).then(user => {
+        User.currentUser = user;
+        User.currentUserPromise = null;
+        return user;
+      });
+    }
+    return User.currentUserPromise;
   }
 
   static loginUser (...args) {
     return User.serverCallStatic('loginUser', args).then((data) => {
       if (data.result) {
+        User.currentUser = data.user;
         User.handleToken();
         for (const callback of User.loginCallbacks) {
           callback(data.user);
@@ -108,7 +120,17 @@ export class User extends Entity {
   }
 
   static getClientConfig (...args) {
-    return User.serverCallStatic('getClientConfig', args);
+    if (User.clientConfig) {
+      return Promise.resolve(User.clientConfig);
+    }
+    if (!User.clientConfigPromise) {
+      User.clientConfigPromise = User.serverCallStatic('getClientConfig', args).then(config => {
+        User.clientConfig = config;
+        User.clientConfigPromise = null;
+        return config;
+      });
+    }
+    return User.clientConfigPromise;
   }
 
   static handleToken () {
@@ -150,6 +172,8 @@ User.class = 'Tilmeld\\Entities\\User';
 User.registerCallbacks = [];
 User.loginCallbacks = [];
 User.logoutCallbacks = [];
+User.clientConfig = undefined;
+User.clientConfigPromise = undefined;
 
 Nymph.setEntityClass(User.class, User);
 
