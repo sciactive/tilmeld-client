@@ -44,16 +44,17 @@
       </div>
     {:else}
       <form ref:form onsubmit="return false;" class="login-dialog pf-form {layout === 'small' ? 'pf-layout-block' : ''}">
-        {#if layout === 'compact'}
+        {#if layout === 'compact' && showCompactHeading}
           <div class="pf-element pf-heading">
             <h2 class="login-dialog-title">{compactText}</h2>
           </div>
         {/if}
 
-        {#if _clientConfig.allow_registration && showExistingUserCheckbox}
-          <div class="pf-element">
-            <span class="{layout !== 'small' ? 'pf-group' : ''}" style="display: {layout !== 'small' ? 'block' : 'in-line'};">
-              <label><input class="pf-field {classCheckbox}" type="checkbox" bind:checked="existingUser" /> I have an account.</label>
+        {#if _clientConfig.allow_registration && showExistingUserToggle}
+          <div class="pf-element pf-full-width">
+            <span class="{classButtonGroup}">
+              <button class="{classButton} {classButtonToggle} {existingUser ? classButtonActive : ''}" type="button" on:click="set({existingUser: true})" disabled="{existingUser && disableActiveButton}" aria-pressed="{existingUser}">Log In</button>
+              <button class="{classButton} {classButtonToggle} {!existingUser ? classButtonActive : ''}" type="button" on:click="set({existingUser: false})" disabled="{!existingUser && disableActiveButton}" aria-pressed="{!existingUser}">Sign Up</button>
             </span>
           </div>
         {/if}
@@ -245,11 +246,12 @@
     data () {
       return {
         layout: 'normal', // 'normal', 'small', or 'compact'
+        showCompactHeading: false, // Whether to show a heading in the dialog when in 'compact' layout.
         compactText: 'Log in/Sign up', // The text used to toggle the dialog when 'compact' layout is selected.
         hideRecovery: false, // Hide the recovery link that only appears if password recovery is on.
         autofocus: true, // Give focus to the username box (or email box) when the form is ready.
-        existingUser: true, // This determines whether the 'I have an account.' box is checked and the registration form is shown.
-        showExistingUserCheckbox: true, // Whether to show the 'I have an account.' box.
+        existingUser: true, // This determines whether the 'Log In' or 'Sign Up' button is activated and which corresponding form is shown.
+        showExistingUserToggle: true, // Whether to show the 'Log In'/'Sign Up' switcher buttons.
         states: [ // The states available when address type is US.
           ['AL', 'Alabama'],
           ['AK', 'Alaska'],
@@ -306,13 +308,16 @@
           ['AE', 'Armed Forces (AE)'],
           ['AP', 'Armed Forces (AP)']
         ],
-        classCheckbox: '',
         classInput: '',
         classRadio: '',
         classSelect: '',
         classTextarea: '',
         classSubmit: '',
+        classButtonGroup: 'button-group',
         classButton: '',
+        classButtonToggle: '',
+        classButtonActive: '',
+        disableActiveButton: true,
         _clientConfig: {
           'reg_fields': [],
           'email_usernames': true,
@@ -557,5 +562,9 @@
   .close-button-container {
     text-align: right;
     margin-top: 1em;
+  }
+  .login-dialog-container :global(.button-group) {
+    display: block;
+    text-align: center;
   }
 </style>
