@@ -134,6 +134,9 @@ export class User extends Entity {
   }
 
   static handleToken () {
+    if (typeof document === 'undefined') {
+      return;
+    }
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)TILMELDAUTH\s*=\s*([^;]*).*$)|^.*$/, '$1');
     if (currentToken !== token) {
       if (token === '') {
