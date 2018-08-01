@@ -157,14 +157,23 @@ export class User extends Entity {
     currentToken = token;
   }
 
-  static on (eventType, callback) {
-    if (eventType === 'register') {
-      User.registerCallbacks.push(callback);
-    } else if (eventType === 'login') {
-      User.loginCallbacks.push(callback);
-    } else if (eventType === 'logout') {
-      User.logoutCallbacks.push(callback);
+  static on (event, callback) {
+    if (!this.hasOwnProperty(event + 'Callbacks')) {
+      return false;
     }
+    this[event + 'Callbacks'].push(callback);
+    return true;
+  }
+
+  static off (event, callback) {
+    if (!this.hasOwnProperty(event + 'Callbacks')) {
+      return false;
+    }
+    const i = this[event + 'Callbacks'].indexOf(callback);
+    if (i > -1) {
+      this[event + 'Callbacks'].splice(i, 1);
+    }
+    return true;
   }
 }
 
@@ -180,6 +189,7 @@ User.clientConfigPromise = undefined;
 
 Nymph.setEntityClass(User.class, User);
 
+Nymph.on('response', () => User.handleToken());
 User.handleToken();
 
 export default User;
