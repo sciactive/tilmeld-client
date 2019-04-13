@@ -105,24 +105,12 @@
 {/if}
 
 <script>
-  import User from '../Entities/User';
+  import { User } from '../Entities';
 
   export default {
-    oncreate () {
-      User.getClientConfig().then(_clientConfig => {
-        this.set({_clientConfig});
-      });
-    },
-
-    onstate ({changed, current}) {
-      if (changed._showDialog && current._showDialog && current.autofocus && this.refs.account) {
-        this.refs.account.focus();
-      }
-    },
-
-    data () {
+    data() {
       return {
-        linkText: 'I can\'t access my account.', // The text used to toggle the dialog.
+        linkText: "I can't access my account.", // The text used to toggle the dialog.
         autofocus: true, // Give focus to the account box when the form is ready.
         recoveryType: 'password',
         classInput: '',
@@ -130,11 +118,11 @@
         classSubmit: '',
         classButton: '',
         _clientConfig: {
-          'reg_fields': [],
-          'email_usernames': true,
-          'allow_registration': true,
-          'pw_recovery': true,
-          'timezones': []
+          reg_fields: [],
+          email_usernames: true,
+          allow_registration: true,
+          pw_recovery: true,
+          timezones: [],
         },
         _showDialog: false,
         _recovering: false,
@@ -144,73 +132,119 @@
         account: '',
         secret: '',
         password: '',
-        password2: ''
+        password2: '',
       };
     },
 
     methods: {
-      sendRecoveryLink () {
+      sendRecoveryLink() {
         if (this.get().account === '') {
-          this.set({_failureMessage: 'You need to enter ' + ((this.get()._clientConfig.email_usernames || this.get().recoveryType === 'username') ? 'an email address' : 'a username') + '.'});
+          this.set({
+            _failureMessage:
+              'You need to enter ' +
+              (this.get()._clientConfig.email_usernames ||
+              this.get().recoveryType === 'username'
+                ? 'an email address'
+                : 'a username') +
+              '.',
+          });
           return;
         }
 
         this.set({
           _failureMessage: null,
-          _recovering: true
+          _recovering: true,
         });
-        User.sendRecoveryLink({'recoveryType': this.get().recoveryType, 'account': this.get().account}).then((data) => {
-          if (!data.result) {
-            this.set({_failureMessage: data.message});
-          } else {
-            if (this.get().recoveryType === 'username') {
-              this.set({_successRecoveredMessage: data.message});
-            } else if (this.get().recoveryType === 'password') {
-              this.set({_hasSentSecret: true});
+        User.sendRecoveryLink({
+          recoveryType: this.get().recoveryType,
+          account: this.get().account,
+        }).then(
+          data => {
+            if (!data.result) {
+              this.set({ _failureMessage: data.message });
+            } else {
+              if (this.get().recoveryType === 'username') {
+                this.set({ _successRecoveredMessage: data.message });
+              } else if (this.get().recoveryType === 'password') {
+                this.set({ _hasSentSecret: true });
+              }
             }
+            this.set({ _recovering: false });
+          },
+          () => {
+            this.set({
+              _failureMessage: 'An error occurred.',
+              _recovering: false,
+            });
           }
-          this.set({_recovering: false});
-        }, () => {
-          this.set({
-            _failureMessage: 'An error occurred.',
-            _recovering: false
-          });
-        });
+        );
       },
 
-      recover () {
+      recover() {
         if (this.get().account === '') {
-          this.set({_failureMessage: 'You need to enter ' + ((this.get()._clientConfig.email_usernames || this.get().recoveryType === 'username') ? 'an email address' : 'a username') + '.'});
+          this.set({
+            _failureMessage:
+              'You need to enter ' +
+              (this.get()._clientConfig.email_usernames ||
+              this.get().recoveryType === 'username'
+                ? 'an email address'
+                : 'a username') +
+              '.',
+          });
           return;
         }
         if (this.get().password !== this.get().password2) {
-          this.set({_failureMessage: 'Your passwords do not match.'});
+          this.set({ _failureMessage: 'Your passwords do not match.' });
           return;
         }
         if (this.get().password === '') {
-          this.set({_failureMessage: 'You need to enter a password.'});
+          this.set({ _failureMessage: 'You need to enter a password.' });
           return;
         }
 
         this.set({
           _failureMessage: null,
-          _recovering: true
+          _recovering: true,
         });
-        User.recover({'username': this.get().account, 'secret': this.get().secret, 'password': this.get().password}).then((data) => {
-          if (!data.result) {
-            this.set({_failureMessage: data.message});
-          } else {
-            this.set({_successRecoveredMessage: data.message});
+        User.recover({
+          username: this.get().account,
+          secret: this.get().secret,
+          password: this.get().password,
+        }).then(
+          data => {
+            if (!data.result) {
+              this.set({ _failureMessage: data.message });
+            } else {
+              this.set({ _successRecoveredMessage: data.message });
+            }
+            this.set({ _recovering: false });
+          },
+          () => {
+            this.set({
+              _failureMessage: 'An error occurred.',
+              _recovering: false,
+            });
           }
-          this.set({_recovering: false});
-        }, () => {
-          this.set({
-            _failureMessage: 'An error occurred.',
-            _recovering: false
-          });
-        });
+        );
+      },
+    },
+
+    oncreate() {
+      User.getClientConfig().then(_clientConfig => {
+        this.set({ _clientConfig });
+      });
+    },
+
+    onstate({ changed, current }) {
+      if (
+        changed._showDialog &&
+        current._showDialog &&
+        current.autofocus &&
+        this.refs.account
+      ) {
+        this.refs.account.focus();
       }
-    }
+    },
   };
 </script>
 

@@ -1,12 +1,10 @@
 /* global atob */
-import {Nymph, Entity, PubSub} from 'nymph-client';
+import { Nymph, Entity, PubSub } from 'nymph-client';
 
 let currentToken = null;
 
 export class User extends Entity {
-  // === Constructor ===
-
-  constructor (id) {
+  constructor(id) {
     super(id);
     this.data.enabled = true;
     this.data.abilities = [];
@@ -15,26 +13,24 @@ export class User extends Entity {
     this.data.addressType = 'us';
   }
 
-  // === Instance Methods ===
-
-  checkUsername (...args) {
+  checkUsername(...args) {
     return this.serverCall('checkUsername', args, true);
   }
 
-  checkEmail (...args) {
+  checkEmail(...args) {
     return this.serverCall('checkEmail', args, true);
   }
 
-  checkPhone (...args) {
+  checkPhone(...args) {
     return this.serverCall('checkPhone', args, true);
   }
 
-  getAvatar (...args) {
+  getAvatar(...args) {
     return this.serverCall('getAvatar', args, true);
   }
 
-  register (...args) {
-    return this.serverCall('register', args).then((data) => {
+  register(...args) {
+    return this.serverCall('register', args).then(data => {
       if (data.result) {
         for (const callback of User.registerCallbacks) {
           const that = this;
@@ -52,8 +48,8 @@ export class User extends Entity {
     });
   }
 
-  logout (...args) {
-    return this.serverCall('logout', args).then((data) => {
+  logout(...args) {
+    return this.serverCall('logout', args).then(data => {
       if (data.result) {
         User.currentUser = undefined;
         User.handleToken();
@@ -65,41 +61,39 @@ export class User extends Entity {
     });
   }
 
-  gatekeeper (...args) {
+  gatekeeper(...args) {
     return this.serverCall('gatekeeper', args, true);
   }
 
-  changePassword (...args) {
+  changePassword(...args) {
     return this.serverCall('changePassword', args);
   }
 
-  // === Static Methods ===
-
-  static byUsername (username) {
+  static byUsername(username) {
     return Nymph.getEntity(
-      {'class': User.class},
-      {'type': '&',
-        'strict': ['username', username]
-      }
+      { class: User.class },
+      { type: '&', strict: ['username', username] }
     );
   }
 
-  static current (...args) {
+  static current(...args) {
     if (User.currentUser !== undefined) {
       return Promise.resolve(User.currentUser);
     }
     if (!User.currentUserPromise) {
-      User.currentUserPromise = User.serverCallStatic('current', args).then(user => {
-        User.currentUser = user;
-        User.currentUserPromise = null;
-        return user;
-      });
+      User.currentUserPromise = User.serverCallStatic('current', args).then(
+        user => {
+          User.currentUser = user;
+          User.currentUserPromise = null;
+          return user;
+        }
+      );
     }
     return User.currentUserPromise;
   }
 
-  static loginUser (...args) {
-    return User.serverCallStatic('loginUser', args).then((data) => {
+  static loginUser(...args) {
+    return User.serverCallStatic('loginUser', args).then(data => {
       if (data.result) {
         User.currentUser = data.user;
         User.handleToken();
@@ -111,20 +105,23 @@ export class User extends Entity {
     });
   }
 
-  static sendRecoveryLink (...args) {
+  static sendRecoveryLink(...args) {
     return User.serverCallStatic('sendRecoveryLink', args);
   }
 
-  static recover (...args) {
+  static recover(...args) {
     return User.serverCallStatic('recover', args);
   }
 
-  static getClientConfig (...args) {
+  static getClientConfig(...args) {
     if (User.clientConfig) {
       return Promise.resolve(User.clientConfig);
     }
     if (!User.clientConfigPromise) {
-      User.clientConfigPromise = User.serverCallStatic('getClientConfig', args).then(config => {
+      User.clientConfigPromise = User.serverCallStatic(
+        'getClientConfig',
+        args
+      ).then(config => {
         User.clientConfig = config;
         User.clientConfigPromise = null;
         return config;
@@ -133,11 +130,14 @@ export class User extends Entity {
     return User.clientConfigPromise;
   }
 
-  static handleToken () {
+  static handleToken() {
     if (typeof document === 'undefined') {
       return;
     }
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)TILMELDAUTH\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    const token = document.cookie.replace(
+      /(?:(?:^|.*;\s*)TILMELDAUTH\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
+    );
     if (currentToken !== token) {
       if (token === '') {
         Nymph.setXsrfToken(null);
@@ -157,7 +157,7 @@ export class User extends Entity {
     currentToken = token;
   }
 
-  static on (event, callback) {
+  static on(event, callback) {
     if (!this.hasOwnProperty(event + 'Callbacks')) {
       return false;
     }
@@ -165,7 +165,7 @@ export class User extends Entity {
     return true;
   }
 
-  static off (event, callback) {
+  static off(event, callback) {
     if (!this.hasOwnProperty(event + 'Callbacks')) {
       return false;
     }
@@ -176,8 +176,6 @@ export class User extends Entity {
     return true;
   }
 }
-
-// === Static Properties ===
 
 // The name of the server class
 User.class = 'Tilmeld\\Entities\\User';
