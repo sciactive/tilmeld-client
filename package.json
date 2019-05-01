@@ -15,7 +15,7 @@
     "format": "npm run format-other && npm run format-svelte",
     "format-svelte": "eslint --fix src/Components/*.html",
     "format-other": "prettier --write src/**/*",
-    "prepare-off": "npm run lint && npm run build",
+    "prepare": "npm run lint && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
