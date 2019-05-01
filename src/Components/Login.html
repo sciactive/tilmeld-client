@@ -522,18 +522,14 @@
 
   let _previousExistingUser;
   $: {
-    if (existingUser !== _previousExistingUser && !existingUser) {
-      this.checkUsername(username);
+    if (existingUser !== _previousExistingUser) {
+      checkUsername(username);
       _previousExistingUser = existingUser;
     }
   }
 
-  let _previousUsername;
   $: {
-    if (username !== _previousUsername && _previousUsername) {
-      this.checkUsername(username, _previousUsername);
-      _previousUsername = username;
-    }
+    checkUsername(username);
   }
 
   onMount(() => {
@@ -603,7 +599,7 @@
     let user = new User();
     user.set({ username });
     if (_clientConfig.email_usernames) {
-      user.set({ email: username});
+      user.set({ email: username });
     } else if (_clientConfig.reg_fields.indexOf('email') !== -1) {
       user.set({ email });
     }
@@ -658,10 +654,7 @@
     );
   }
 
-  function checkUsername(newValue, oldValue) {
-    if (newValue === oldValue) {
-      return;
-    }
+  function checkUsername(newValue) {
     _usernameVerified = null;
     _usernameVerifiedMessage = null;
     if (_usernameTimer) {
