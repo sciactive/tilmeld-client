@@ -4,7 +4,7 @@
   "description": "Nymph user and group management with access controls.",
   "main": "lib/index.js",
   "scripts": {
-    "build-components": "svelte compile src/Components -o lib/Components && cp src/Components/index.js lib/Components/",
+    "build-components": "node make.js && cp src/Components/index.js lib/Components/",
     "build-entities": "cp -a src/Entities lib/",
     "build-index": "cp src/index.js lib/",
     "pack": "webpack",
@@ -48,22 +48,21 @@
     "pform": "^3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/plugin-transform-classes": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-transform-classes": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "@tivac/eslint-plugin-svelte": "^1.2.1",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
     "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.1.0",
+    "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-html": "^5.0.3",
     "eslint-plugin-prettier": "^3.0.1",
-    "prettier": "^1.16.4",
-    "svelte": "^2.16.1",
-    "svelte-cli": "^3.0.0",
+    "prettier": "^1.17.0",
+    "svelte": "^3.1.0",
     "svelte-loader": "^2.13.3",
     "umailphp": "^2.4",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
   }
 }
