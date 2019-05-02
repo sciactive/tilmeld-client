@@ -3,30 +3,23 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    Components: './src/Components/index.js',
-    Entities: './src/Entities/index.js',
+    TilmeldClient: './src/index.js',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    library: ['TilmeldClient', '[name]'],
+    library: ['tilmeld-client'],
+    libraryTarget: 'umd',
+    globalObject: 'this',
   },
   resolve: {
-    extensions: ['.wasm', '.mjs', '.js', '.json', '.html'],
+    extensions: ['.wasm', '.mjs', '.js', '.json'],
   },
   externals: {
-    'nymph-client': 'NymphClient',
-    '../Entities': 'TilmeldClient.Entities',
+    'nymph-client': 'nymph-client',
   },
   module: {
     rules: [
-      {
-        test: /\.(html|svelte)$/,
-        exclude: /\/node_modules\//,
-        use: {
-          loader: 'svelte-loader',
-        },
-      },
       {
         test: /\.js$/,
         exclude: /node_modules/,

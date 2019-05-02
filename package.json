@@ -2,25 +2,17 @@
   "name": "tilmeld-client",
   "version": "1.0.0-beta.23",
   "description": "Nymph user and group management with access controls.",
-  "main": "lib/index.js",
+  "main": "dist/TilmeldClient.js",
+  "module": "src/index.js",
   "scripts": {
-    "build-components": "node make.js && cp src/Components/index.js lib/Components/",
-    "build-entities": "cp -a src/Entities lib/",
-    "build-index": "cp src/index.js lib/",
-    "pack": "webpack",
-    "build": "npm run build-components && npm run build-entities && npm run build-index && npm run pack",
-    "lint": "npm run lint-other && npm run lint-svelte",
-    "lint-svelte": "eslint src/Components/*.html",
-    "lint-other": "prettier -c src/**/*",
-    "format": "npm run format-other && npm run format-svelte",
-    "format-svelte": "eslint --fix src/Components/*.html",
-    "format-other": "prettier --write src/**/*",
+    "build": "webpack",
+    "lint": "prettier -c src/**/*",
+    "format": "prettier --write src/**/*",
     "prepare": "npm run lint && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
     "dist",
-    "lib",
     "src"
   ],
   "repository": {
@@ -44,24 +36,18 @@
   },
   "homepage": "https://github.com/sciactive/tilmeld-client#readme",
   "dependencies": {
-    "nymph-client": "^4.0.0-beta.16",
-    "pform": "^3.3"
+    "nymph-client": "^4.0.0-beta.16"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/plugin-transform-classes": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
-    "@tivac/eslint-plugin-svelte": "^1.2.1",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-html": "^5.0.3",
     "eslint-plugin-prettier": "^3.0.1",
     "prettier": "^1.17.0",
-    "svelte": "^3.1.0",
-    "svelte-loader": "^2.13.3",
-    "umailphp": "^2.4",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.1"
   }
