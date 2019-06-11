@@ -3,37 +3,37 @@ import { Nymph, Entity } from 'nymph-client';
 export class Group extends Entity {
   constructor(id) {
     super(id);
-    this.data.enabled = true;
-    this.data.abilities = [];
-    this.data.addressType = 'us';
+    this.enabled = true;
+    this.abilities = [];
+    this.addressType = 'us';
   }
 
-  checkGroupname(...args) {
-    return this.serverCall('checkGroupname', args, true);
+  $checkGroupname(...args) {
+    return this.$serverCall('checkGroupname', args, true);
   }
 
-  checkEmail(...args) {
-    return this.serverCall('checkEmail', args, true);
+  $checkEmail(...args) {
+    return this.$serverCall('checkEmail', args, true);
   }
 
-  getAvatar(...args) {
-    return this.serverCall('getAvatar', args, true);
+  $getAvatar(...args) {
+    return this.$serverCall('getAvatar', args, true);
   }
 
-  getChildren(...args) {
-    return this.serverCall('getChildren', args, true);
+  $getChildren(...args) {
+    return this.$serverCall('getChildren', args, true);
   }
 
-  getDescendants(...args) {
-    return this.serverCall('getDescendants', args, true);
+  $getDescendants(...args) {
+    return this.$serverCall('getDescendants', args, true);
   }
 
-  getLevel(...args) {
-    return this.serverCall('getLevel', args, true);
+  $getLevel(...args) {
+    return this.$serverCall('getLevel', args, true);
   }
 
-  isDescendant(...args) {
-    return this.serverCall('isDescendant', args, true);
+  $isDescendant(...args) {
+    return this.$serverCall('isDescendant', args, true);
   }
 
   static getPrimaryGroups(...args) {

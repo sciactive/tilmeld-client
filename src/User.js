@@ -6,31 +6,31 @@ let currentToken = null;
 export class User extends Entity {
   constructor(id) {
     super(id);
-    this.data.enabled = true;
-    this.data.abilities = [];
-    this.data.groups = [];
-    this.data.inheritAbilities = true;
-    this.data.addressType = 'us';
+    this.enabled = true;
+    this.abilities = [];
+    this.groups = [];
+    this.inheritAbilities = true;
+    this.addressType = 'us';
   }
 
-  checkUsername(...args) {
-    return this.serverCall('checkUsername', args, true);
+  $checkUsername(...args) {
+    return this.$serverCall('checkUsername', args, true);
   }
 
-  checkEmail(...args) {
-    return this.serverCall('checkEmail', args, true);
+  $checkEmail(...args) {
+    return this.$serverCall('checkEmail', args, true);
   }
 
-  checkPhone(...args) {
-    return this.serverCall('checkPhone', args, true);
+  $checkPhone(...args) {
+    return this.$serverCall('checkPhone', args, true);
   }
 
-  getAvatar(...args) {
-    return this.serverCall('getAvatar', args, true);
+  $getAvatar(...args) {
+    return this.$serverCall('getAvatar', args, true);
   }
 
-  register(...args) {
-    return this.serverCall('register', args).then(data => {
+  $register(...args) {
+    return this.$serverCall('register', args).then(data => {
       if (data.result) {
         for (const callback of User.registerCallbacks) {
           const that = this;
@@ -48,8 +48,8 @@ export class User extends Entity {
     });
   }
 
-  logout(...args) {
-    return this.serverCall('logout', args).then(data => {
+  $logout(...args) {
+    return this.$serverCall('logout', args).then(data => {
       if (data.result) {
         User.currentUser = undefined;
         User.handleToken();
@@ -61,12 +61,12 @@ export class User extends Entity {
     });
   }
 
-  gatekeeper(...args) {
-    return this.serverCall('gatekeeper', args, true);
+  $gatekeeper(...args) {
+    return this.$serverCall('gatekeeper', args, true);
   }
 
-  changePassword(...args) {
-    return this.serverCall('changePassword', args);
+  $changePassword(...args) {
+    return this.$serverCall('changePassword', args);
   }
 
   static byUsername(username) {
