@@ -32,16 +32,14 @@ export class User extends Entity {
   $register(...args) {
     return this.$serverCall('register', args).then(data => {
       if (data.result) {
-        for (const callback of User.registerCallbacks) {
-          const that = this;
-          callback(that);
+        for (let i = 0; i < User.registerCallbacks.length; i++) {
+          User.registerCallbacks[i] && User.registerCallbacks[i](this);
         }
       }
       if (data.loggedin) {
         User.handleToken();
-        for (const callback of User.loginCallbacks) {
-          const that = this;
-          callback(that);
+        for (let i = 0; i < User.loginCallbacks.length; i++) {
+          User.loginCallbacks[i] && User.loginCallbacks[i](this);
         }
       }
       return Promise.resolve(data);
@@ -53,8 +51,8 @@ export class User extends Entity {
       if (data.result) {
         User.currentUser = undefined;
         User.handleToken();
-        for (const callback of User.logoutCallbacks) {
-          callback();
+        for (let i = 0; i < User.logoutCallbacks.length; i++) {
+          User.logoutCallbacks[i] && User.logoutCallbacks[i](this);
         }
       }
       return Promise.resolve(data);
@@ -97,8 +95,8 @@ export class User extends Entity {
       if (data.result) {
         User.currentUser = data.user;
         User.handleToken();
-        for (const callback of User.loginCallbacks) {
-          callback(data.user);
+        for (let i = 0; i < User.loginCallbacks.length; i++) {
+          User.loginCallbacks[i] && User.loginCallbacks[i](data.user);
         }
       }
       return Promise.resolve(data);
@@ -130,14 +128,19 @@ export class User extends Entity {
     return User.clientConfigPromise;
   }
 
-  static handleToken() {
-    if (typeof document === 'undefined') {
+  static handleToken(response) {
+    let token;
+    const authCookiePattern = /(?:(?:^|.*;\s*)TILMELDAUTH\s*=\s*([^;]*).*$)|^.*$/;
+    if (response && response.headers.has('X-TILMELDAUTH')) {
+      token = response.headers.get('X-TILMELDAUTH');
+    } else if (
+      typeof document !== 'undefined' &&
+      document.cookie.match(authCookiePattern)
+    ) {
+      token = document.cookie.replace(authCookiePattern, '$1');
+    } else {
       return;
     }
-    const token = document.cookie.replace(
-      /(?:(?:^|.*;\s*)TILMELDAUTH\s*=\s*([^;]*).*$)|^.*$/,
-      '$1'
-    );
     if (currentToken !== token) {
       if (token === '') {
         Nymph.setXsrfToken(null);
@@ -147,7 +150,11 @@ export class User extends Entity {
       } else {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jwt = JSON.parse(atob(base64));
+        const json =
+          typeof atob === 'undefined'
+            ? Buffer.from(base64, 'base64').toString('binary') // node
+            : atob(base64); // browser
+        const jwt = JSON.parse(json);
         Nymph.setXsrfToken(jwt.xsrfToken);
         if (PubSub.pubsubURL != null) {
           PubSub.setToken(token);
@@ -187,7 +194,7 @@ User.clientConfigPromise = undefined;
 
 Nymph.setEntityClass(User.class, User);
 
-Nymph.on('response', () => User.handleToken());
+Nymph.on('response', response => User.handleToken(response));
 User.handleToken();
 
 export default User;
