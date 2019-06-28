@@ -1,6 +1,6 @@
 {
   "name": "tilmeld-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Nymph user and group management with access controls.",
   "main": "dist/TilmeldClient.js",
   "module": "src/index.js",
